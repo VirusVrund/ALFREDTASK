@@ -1,0 +1,219 @@
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* Theme Variables */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #f5f6fa;
+    --text-color: #2c3e50;
+    --danger-color: #e74c3c;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --input-bg: #ffffff;
+    --input-text: #212529;
+    --navbar-bg: #ffffff;
+    --navbar-light-bg: #f8f9fa;
+    --navbar-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="dark"] {
+    --background-color: #212529;
+    --text-color: #f8f9fa;
+    --card-bg: #2c3034;
+    --border-color: #495057;
+    --input-bg: #495057;
+    --input-text: #f8f9fa;
+    --navbar-bg: #343a40;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --navbar-light-bg: var(--navbar-bg);
+    --navbar-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Global Styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Form Styles */
+.form-control {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* Auth Container */
+.auth-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+
+/* Update Navbar Styles */
+.navbar {
+    background-color: var(--navbar-light-bg);
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--navbar-shadow);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+.navbar-brand:hover {
+    color: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.nav-link {
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover {
+    background-color: rgba(52, 152, 219, 0.08);
+    color: var(--primary-color);
+}
+
+.nav-link.active {
+    background-color: rgba(52, 152, 219, 0.12);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-color);
+    transform: scaleX(1);
+    transition: transform 0.3s ease;
+}
+
+/* Mobile Navbar Improvements */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: var(--navbar-light-bg);
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: var(--navbar-shadow);
+    }
+
+    .nav-link {
+        margin: 0.25rem 0;
+    }
+
+    .nav-link.active::after {
+        display: none;
+    }
+}
+/* Flipcard Component */
+.my-flipcard {
+    perspective: 2000px;
+    width: 100%;
+    min-height: 300px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.my-flipcard-inner {
+    width: 100%;
+    min-height: 300px;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.my-flipcard-front,
+.my-flipcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    will-change: transform, opacity;
+}
+
+.my-flipcard-back {
+    transform: rotateY(180deg);
+}
+
+.my-flipcard:hover .my-flipcard-front,
+.my-flipcard:hover .my-flipcard-back {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-color: var(--primary-color);
+}
+
+/* Dark Mode Form Fix */
+[data-bs-theme="dark"] input:-webkit-autofill {
+    -webkit-text-fill-color: var(--input-text);
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+/* Dashboard Styles */
+.dashboard-welcome {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 600;
+}
+
+.dashboard-stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
+    border-color: var(--card-bg) !important;
+   
+}
+.progress {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
