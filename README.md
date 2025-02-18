@@ -12,7 +12,7 @@ A modern flashcard application built with the MERN stack (MongoDB, Express.js, R
 - 📱 Responsive design for all devices
 
 ## Tech Stack
-- **Frontend**: React 18, Vite, Bootstrap 5
+- **Frontend**: React 19, Vite, Bootstrap 5
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
 - **Authentication**: JWT
