@@ -53,9 +53,9 @@ body {
 
 /* Auth Container */
 .auth-container {
-    max-width: 400px;
+    max-width: 500px;
     margin: 50px auto;
-    padding: 2rem;
+    padding: 2.5rem;
     background: var(--card-bg);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -136,6 +136,7 @@ body {
         display: none;
     }
 }
+
 /* Flipcard Component */
 .my-flipcard {
     perspective: 2000px;
@@ -188,6 +189,7 @@ body {
     -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset;
     transition: background-color 5000s ease-in-out 0s;
 }
+
 /* Dashboard Styles */
 .dashboard-welcome {
     background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
@@ -207,8 +209,9 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--box-shadow);
     border-color: var(--card-bg) !important;
-   
+
 }
+
 .progress {
     border-radius: var(--border-radius);
     overflow: hidden;

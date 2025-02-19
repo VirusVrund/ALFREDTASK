@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://mindflip-two.vercel.app/api',
   withCredentials: true,
 });
 
@@ -30,17 +30,17 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear auth data from localStorage
       localStorage.removeItem('auth');
-      
+
       // Redirect to login with expired session message
       window.location.href = '/login';
-      
+
       //could also use React Router's navigate, but window.location ensures a fresh state
       return Promise.reject({
         ...error,
         message: 'Your session has expired. Please login again.'
       });
     }
-    
+
     return Promise.reject(error);
   }
 );
