@@ -23,7 +23,7 @@ exports.register = async (req, res, next) => {
     await user.save();
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     res.status(201).json({ token, userId: user._id, username: user.username, email: user.email });
   } catch (err) {
@@ -46,7 +46,7 @@ exports.login = async (req, res, next) => {
       return next(new AppError('Invalid credentials', 400, ErrorCodes.INVALID_INPUT));
     }
 
-    const token = jwt.sign({ userId: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     // In login controller
     res.status(200).json({ token, userId: user._id, username: user.username, email: user.email });
