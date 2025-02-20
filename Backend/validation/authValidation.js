@@ -48,4 +48,25 @@ const loginSchema = Joi.object({
     })
 });
 
-module.exports = { registerSchema, loginSchema };
+// ...existing code...
+
+const passwordUpdateSchema = Joi.object({
+  oldPassword: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'Current password is required'
+    }),
+  newPassword: Joi.string()
+    .min(8)
+    .max(50)
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+      'string.min': 'Password must be at least 8 characters long',
+      'string.max': 'Password cannot exceed 50 characters',
+      'string.empty': 'New password is required'
+    })
+});
+
+module.exports = { registerSchema, loginSchema, passwordUpdateSchema };
