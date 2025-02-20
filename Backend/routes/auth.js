@@ -12,6 +12,6 @@ router.post('/register', validationMiddleware(registerSchema), register);
 router.post('/login', validationMiddleware(loginSchema), login);
 
 // Update user password
-router.put('/users/:userId/password',authMiddleware, updatePassword);
+router.put('/users/:userId/password', updatePassword);
 
 module.exports = router;
