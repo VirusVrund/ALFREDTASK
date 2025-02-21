@@ -50,8 +50,7 @@ A modern flashcard application built with the MERN stack (MongoDB, Express.js, R
    JWT_SECRET=your_jwt_secret
    PORT=5000
 
-   # Frontend .env
-   VITE_API_URL=http://localhost:5000/api
+
    ```
 
 ## Running the Application
