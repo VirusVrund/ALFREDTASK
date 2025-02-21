@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const flashcardRoutes = require('./routes/flashcards');
 const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
+const predefinedDeckRoutes = require('./routes/predefined');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/flashcards', authMiddleware, flashcardRoutes);
+app.use('/api/predefined-decks', predefinedDeckRoutes);
 
 // Health check route
 app.get('/health', (req, res) => {

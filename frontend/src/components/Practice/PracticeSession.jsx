@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../utils/axios';
 import FlipCard from '../Common/FlipCard';
 
@@ -9,17 +9,25 @@ const PracticeSession = () => {
     const [showAnswer, setShowAnswer] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [sessionStarted, setSessionStarted] = useState(false);
     const [sessionStats, setSessionStats] = useState({
         correct: 0,
         incorrect: 0
     });
     const navigate = useNavigate();
+    const { deckId } = useParams();
 
     useEffect(() => {
-        fetchFlashcards();
-    }, []);
+        if (deckId === 'my-cards') {
+            fetchUserCards();
+        } else if (deckId) {
+            fetchPredefinedCards(deckId);
+        } else {
+            setLoading(false);
+        }
+    }, [deckId]);
 
-    const fetchFlashcards = async () => {
+    const fetchUserCards = async () => {
         try {
             setLoading(true);
             const response = await api.get('/flashcards');
@@ -27,9 +35,9 @@ const PracticeSession = () => {
                 setError('No flashcards found. Create some cards first!');
                 return;
             }
-            // Shuffle the cards for random practice
             const shuffledCards = response.data.sort(() => Math.random() - 0.5);
             setFlashcards(shuffledCards);
+            setSessionStarted(true);
         } catch (err) {
             console.error('Failed to fetch flashcards:', err);
             setError('Failed to load practice session');
@@ -38,15 +46,33 @@ const PracticeSession = () => {
         }
     };
 
+    const fetchPredefinedCards = async (deckId) => {
+        try {
+            setLoading(true);
+            const response = await api.get(`/predefined-decks/${deckId}`);
+            if (!response.data || !response.data.cards.length) {
+                setError('No flashcards found in this deck!');
+                return;
+            }
+            const shuffledCards = response.data.cards.sort(() => Math.random() - 0.5);
+            setFlashcards(shuffledCards);
+            setSessionStarted(true);
+        } catch (err) {
+            console.error('Failed to fetch predefined deck:', err);
+            setError('Failed to load predefined deck');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+   
     const handleResponse = (correct) => {
-        // Update session stats
         setSessionStats(prev => ({
             correct: prev.correct + (correct ? 1 : 0),
             incorrect: prev.incorrect + (correct ? 0 : 1)
         }));
 
         setShowAnswer(false);
-        // Move to next card or end session
         setTimeout(() => {
             if (currentIndex < flashcards.length - 1) {
                 setCurrentIndex(prev => prev + 1);
@@ -61,6 +87,51 @@ const PracticeSession = () => {
         }, 300);
     };
 
+    if (!sessionStarted && !deckId) {
+        return (
+            <div className="container mt-4">
+                <h2 className="text-center mb-4">Choose Your Practice Mode</h2>
+                <div className="row justify-content-center">
+                    <div className="col-md-4 mb-3">
+                        <div
+                            className="card h-100 practice-mode-card user-cards"
+                            onClick={() => navigate('/practice/my-cards')}
+                        >
+                            <div className="card-body text-center d-flex flex-column justify-content-center">
+                                <i className="bi bi-person-workspace mb-3 fs-1"></i>
+                                <h5 className="card-title">My Flashcards</h5>
+                                <p className="card-text text-muted">Practice with your personal collection</p>
+                                <div className="mt-auto">
+                                    <button className="btn btn-outline-primary mt-3">
+                                        Start Practice <i className="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4 mb-3">
+                        <div
+                            className="card h-100 practice-mode-card predefined-cards"
+                            onClick={() => navigate('/predefined-decks')}
+                        >
+                            <div className="card-body text-center d-flex flex-column justify-content-center">
+                                <i className="bi bi-collection mb-3 fs-1"></i>
+                                <h5 className="card-title">Predefined Decks</h5>
+                                <p className="card-text text-muted">Practice with our curated collection</p>
+                                <div className="mt-auto">
+                                    <button className="btn btn-outline-info mt-3">
+                                        Browse Decks <i className="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Your existing loading state
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center min-vh-50">
@@ -71,6 +142,7 @@ const PracticeSession = () => {
         );
     }
 
+    // Your existing error state
     if (error) {
         return (
             <div className="container mt-4">
@@ -87,6 +159,7 @@ const PracticeSession = () => {
         );
     }
 
+    // Your existing empty state
     if (flashcards.length === 0) {
         return (
             <div className="container mt-4 text-center">
@@ -102,6 +175,7 @@ const PracticeSession = () => {
         );
     }
 
+    // practice session UI
     const currentCard = flashcards[currentIndex];
     const progress = ((currentIndex + 1) / flashcards.length) * 100;
 

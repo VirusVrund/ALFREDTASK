@@ -15,6 +15,8 @@ import Settings from './components/Profile/Settings';
 import './styles/styles.css';
 import AllFlashcards from './components/Flashcards/AllFlashcards';
 import PracticeSession from './components/Practice/PracticeSession';
+import PredefinedDecks from './components/Practice/PredefinedDecks/index';
+import Footer from './components/Common/Footer';
 
 const App = () => {
   const { auth } = useContext(AuthContext);
@@ -30,22 +32,24 @@ const App = () => {
     { path: '/profile', element: <PrivateRoute component={Profile} /> },
     { path: '/settings', element: <PrivateRoute component={Settings} /> },
     { path: '/practice', element: <PrivateRoute component={PracticeSession} /> },
+    { path: '/practice/:deckId', element: <PrivateRoute component={PracticeSession} /> },
+    { path: '/predefined-decks', element: <PrivateRoute component={PredefinedDecks} /> },
     { path: '/', element: auth?.token ? <Dashboard /> : <Login /> }
   ];
 
   return (
-    <div className="App">
+    <div className="App d-flex flex-column min-vh-100">
       <Navbar />
       <DarkModeToggle />
-      <div className="container">
+      <div className="container flex-grow-1">
         <Routes>
           {routes.map(({ path, element }) => (
             <Route key={path} path={path} element={element} />
           ))}
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 };
-
 export default App;

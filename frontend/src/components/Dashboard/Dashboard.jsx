@@ -151,10 +151,16 @@ const Dashboard = () => {
                                         {stats.boxCounts.map((count, index) => (
                                             <div
                                                 key={index}
-                                                className={`progress-bar bg-${index === 4 ? 'success' : index === 0 ? 'danger' : 'warning'}`}
+                                                className={`progress-bar ${
+                                                        index === 4 ? 'bg-success' :
+                                                        index === 0 ? 'bg-danger' :
+                                                        index === 1 ? 'bg-warning' :
+                                                        index === 2 ? 'box-3' :
+                                                        'box-4'
+                                                    }`}
                                                 style={{
                                                     width: `${(count / stats.totalCards) * 100}%`,
-                                                    opacity: 0.6 + (index * 0.1)
+                                                    opacity: 1
                                                 }}
                                                 title={`Box ${index + 1}: ${count} cards`}
                                             >
