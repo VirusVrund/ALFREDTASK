@@ -45,32 +45,33 @@ const ReviewSession = () => {
     return today.toISOString();
   };
 
-  
+
 
   const handleResponse = async (correct) => {
     try {
       const currentCard = flashcards[currentIndex];
-      const newBox = correct ?
-        Math.min(currentCard.box + 1, 5) :
-        1;
-  
+
+      setShowAnswer(false);
+      if (currentIndex < flashcards.length - 1) {
+        setCurrentIndex((prev) => prev + 1);
+      } else {
+        setTimeout(() => {
+          navigate('/dashboard', { state: { message: 'Review session completed!' } });
+        }, 300);
+      }
+
+      // Update the flashcard in the background
+      const newBox = correct ? Math.min(currentCard.box + 1, 5) : 1;
       const updateData = {
         box: newBox,
-        nextReviewDate: calculateNextReviewDate(newBox)
+        nextReviewDate: calculateNextReviewDate(newBox),
       };
-  
-      await api.put(`/flashcards/${currentCard._id}`, updateData);
-  
-      // Reset flip state and update index with delay
-      setShowAnswer(false);
-      setTimeout(() => {
-        if (currentIndex < flashcards.length - 1) {
-          setCurrentIndex(prev => prev + 1);
-        } else {
-          navigate('/dashboard', { state: { message: 'Review session completed!' } });
-        }
-      }, 300);
-  
+
+      // Make the API call without waiting for it to complete
+      api.put(`/flashcards/${currentCard._id}`, updateData).catch((err) => {
+        console.error('Failed to update flashcard:', err);
+        setError('Failed to update flashcard. Please try again.');
+      });
     } catch (err) {
       setError('Failed to update flashcard. Please try again.');
     }

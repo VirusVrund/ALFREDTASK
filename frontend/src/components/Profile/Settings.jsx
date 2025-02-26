@@ -31,8 +31,6 @@ const Settings = () => {
     }
 
     try {
-      // Log request details (excluding sensitive data)
-      console.log('Attempting password update for user:', auth.userId);
 
       const response = await api.put(`/auth/users/${auth.userId}/password`, {
         oldPassword,

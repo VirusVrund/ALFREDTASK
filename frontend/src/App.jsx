@@ -17,7 +17,10 @@ import AllFlashcards from './components/Flashcards/AllFlashcards';
 import PracticeSession from './components/Practice/PracticeSession';
 import PredefinedDecks from './components/Practice/PredefinedDecks/index';
 import Footer from './components/Common/Footer';
-
+import AIGenerator from './components/AIFlashcards/AIGenerator';
+import AIDecks from './components/AIFlashcards/AIDecks';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const { auth } = useContext(AuthContext);
 
@@ -34,6 +37,9 @@ const App = () => {
     { path: '/practice', element: <PrivateRoute component={PracticeSession} /> },
     { path: '/practice/:deckId', element: <PrivateRoute component={PracticeSession} /> },
     { path: '/predefined-decks', element: <PrivateRoute component={PredefinedDecks} /> },
+    { path: '/ai-generate', element: <PrivateRoute component={AIGenerator} /> },
+    { path: '/practice/ai-:deckId', element: <PrivateRoute component={PracticeSession} /> },
+    {path: '/ai-decks',element: <PrivateRoute component={AIDecks} />},
     { path: '/', element: auth?.token ? <Dashboard /> : <Login /> }
   ];
 
@@ -49,6 +55,18 @@ const App = () => {
         </Routes>
       </div>
       <Footer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };

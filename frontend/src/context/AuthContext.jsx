@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
       }
       return parsedAuth;
     } catch (error) {
-      console.error('Error reading auth state:', error);
       localStorage.removeItem('auth');
       return { token: null, userId: null, username: null, email: null };
     }
@@ -31,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     try {
       localStorage.removeItem('auth');
       setAuth({ token: null, userId: null, username: null, email: null });
-      console.log('Auth state cleared');
+
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -47,12 +46,6 @@ export const AuthProvider = ({ children }) => {
     try {
       localStorage.setItem('auth', JSON.stringify(authData));
       setAuth(authData);
-      console.log('Auth state updated:', {
-        token: token.substring(0, 20) + '...',
-        userId,
-        username,
-        email
-      });
     } catch (error) {
       console.error('Error saving auth state:', error);
       throw error;
@@ -63,16 +56,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     try {
       // Validate current auth state
-      if (auth?.token) {
-        // Log auth state for debugging
-        console.log('Current auth state:', {
-          token: auth.token.substring(0, 20) + '...',
-          userId: auth.userId,
-          username: auth.username
-        });
+      if (!auth?.token) {
+        logout();
       }
     } catch (error) {
-      console.error('Error in auth validation:', error);
       logout();
     } finally {
       setLoading(false);

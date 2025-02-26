@@ -14,28 +14,38 @@ const FlipCard = ({ frontContent, backContent, isFlipped, onClick, onResponse })
           type: "tween"
         }}
       >
+        {/* Front Side */}
         <motion.div 
           className="my-flipcard-front"
           initial={false}
           animate={{ opacity: isFlipped ? 0 : 1 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="card-body text-center">
-            <h5 className="card-title mb-4">Question</h5>
-            <div className="card-text fs-4 mb-4">{frontContent}</div>
+          <div className="card-body text-center d-flex flex-column justify-content-between">
+            <div>
+              <h5 className="card-title mb-4">Question</h5>
+              <div className="card-text fs-4 mb-4" style={{ overflowY: 'auto', maxHeight: '200px' }}>
+                {frontContent}
+              </div>
+            </div>
             <small className="text-muted">Click to see answer</small>
           </div>
         </motion.div>
 
+        {/* Back Side */}
         <motion.div 
           className="my-flipcard-back"
           initial={false}
           animate={{ opacity: isFlipped ? 1 : 0 }}
           transition={{ duration: 0.4 }}
         >
-          <div className="card-body text-center">
-            <h5 className="card-title mb-4">Answer</h5>
-            <div className="card-text fs-4 mb-4">{backContent}</div>
+          <div className="card-body text-center d-flex flex-column justify-content-between">
+            <div>
+              <h5 className="card-title mb-4">Answer</h5>
+              <div className="card-text fs-4 mb-4" style={{ overflowY: 'auto', maxHeight: '200px' }}>
+                {backContent}
+              </div>
+            </div>
             <div className="d-flex justify-content-center gap-3 mt-4">
               <button
                 className="btn btn-danger"

@@ -17,7 +17,8 @@ const PredefinedDecks = () => {
         try {
             setLoading(true);
             const response = await api.get('/predefined-decks');
-            setDecks(response.data);
+            const filteredDecks = response.data.filter(deck => deck.category !== 'ai-generated');
+            setDecks(filteredDecks);
         } catch (err) {
             console.error('Failed to fetch predefined decks:', err);
             setError('Failed to load predefined decks');

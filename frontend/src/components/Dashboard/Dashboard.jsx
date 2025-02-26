@@ -3,9 +3,13 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../utils/axios';
 
-const StatCard = ({ title, value, icon, color }) => (
+const StatCard = ({ title, value, icon, color, onClick }) => (
     <div className="col-md-6 col-lg-3">
-        <div className="card h-100 dashboard-stat-card">
+        <div
+            className={`card h-100 dashboard-stat-card ${onClick ? 'cursor-pointer' : ''}`}
+            onClick={onClick}
+            style={{ cursor: onClick ? 'pointer' : 'default' }}
+        >
             <div className="card-body text-center">
                 <i className={`bi ${icon} mb-3 text-${color}`} style={{ fontSize: '2rem' }}></i>
                 <h5 className="card-title">{title}</h5>
@@ -93,27 +97,33 @@ const Dashboard = () => {
                 </div>
             )}
 
-            <div className="row mb-4">
-                <div className="col-md-6">
-                    <h2 className="dashboard-welcome">Hey {auth.username}, great to see you!</h2>
-                </div>
-                <div className="col-md-6 text-md-end d-flex justify-content-end gap-3">
-                    {stats.dueToday > 0 && (
-                        <Link to="/review" className="btn btn-success btn-lg">
-                            <i className="bi bi-play-circle me-2"></i>
-                            Start Review ({stats.dueToday})
-                        </Link>
-                    )}
-                    <Link to="/create-flashcard" className="btn btn-outline-primary btn-lg">
-                        <i className="bi bi-plus-circle me-2"></i>
-                        Create Card
-                    </Link>
-                    <Link to="/practice" className="btn btn-outline-warning btn-lg">
-                        <i className="bi bi-lightning-charge me-2"></i>
-                        Practice Mode
-                    </Link>
-                </div>
-            </div>
+<div className="row mb-4">
+    <div className="col-md-6 mb-3 mb-md-0">
+        <h2 className="dashboard-welcome">Hey {auth.username}, great to see you!</h2>
+    </div>
+    <div className="col-md-6">
+        <div className="d-flex flex-wrap gap-2 justify-content-md-end">
+            {stats.dueToday > 0 && (
+                <Link to="/review" className="btn btn-success flex-grow-1 flex-md-grow-0">
+                    <i className="bi bi-play-circle me-2"></i>
+                    Review ({stats.dueToday})
+                </Link>
+            )}
+            <Link to="/create-flashcard" className="btn btn-outline-primary flex-grow-1 flex-md-grow-0">
+                <i className="bi bi-plus-circle me-2"></i>
+                Create
+            </Link>
+            <Link to="/ai-generate" className="btn btn-outline-info flex-grow-1 flex-md-grow-0">
+                <i className="bi bi-robot me-2"></i>
+                AI Gen
+            </Link>
+            <Link to="/practice" className="btn btn-outline-warning flex-grow-1 flex-md-grow-0">
+                <i className="bi bi-lightning-charge me-2"></i>
+                Practice
+            </Link>
+        </div>
+    </div>
+</div>
 
             <div className="row g-4">
                 <StatCard
@@ -121,24 +131,31 @@ const Dashboard = () => {
                     value={stats.totalCards}
                     icon="bi-collection"
                     color="primary"
+                    onClick={() => navigate('/all-flashcards')}
                 />
                 <StatCard
                     title="Due Today"
                     value={stats.dueToday}
                     icon="bi-calendar-check"
                     color="warning"
+                    onClick={() => navigate('/review')}
                 />
                 <StatCard
                     title="Success Rate"
                     value={`${stats.successRate}%`}
                     icon="bi-graph-up"
                     color="success"
+                    onClick={() => navigate('/practice')}
                 />
                 <StatCard
                     title="Mastered"
                     value={stats.boxCounts[4]}
                     icon="bi-trophy"
                     color="info"
+                    onClick={() => {
+                        const element = document.querySelector('.progress');
+                        element?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                 />
 
                 <div className="col-12">
@@ -151,12 +168,11 @@ const Dashboard = () => {
                                         {stats.boxCounts.map((count, index) => (
                                             <div
                                                 key={index}
-                                                className={`progress-bar ${
-                                                        index === 4 ? 'bg-success' :
-                                                        index === 0 ? 'bg-danger' :
+                                                className={`progress-bar ${index === 4 ? 'bg-success' :
+                                                    index === 0 ? 'bg-danger' :
                                                         index === 1 ? 'bg-warning' :
-                                                        index === 2 ? 'box-3' :
-                                                        'box-4'
+                                                            index === 2 ? 'box-3' :
+                                                                'box-4'
                                                     }`}
                                                 style={{
                                                     width: `${(count / stats.totalCards) * 100}%`,
@@ -164,7 +180,7 @@ const Dashboard = () => {
                                                 }}
                                                 title={`Box ${index + 1}: ${count} cards`}
                                             >
-                                                Box {index + 1}
+                                                Lv {index + 1}
                                             </div>
                                         ))}
                                     </div>
@@ -181,7 +197,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

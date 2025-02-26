@@ -60,6 +60,15 @@ const Navbar = () => {
                                         Create Card
                                     </Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link
+                                        className={`nav-link ${location.pathname === '/ai-generate' ? 'active' : ''}`}
+                                        to="/ai-generate"
+                                    >
+                                        <i className="bi bi-robot me-1"></i>
+                                        AI Generator
+                                    </Link>
+                                </li>
                             </>
                         )}
                     </ul>

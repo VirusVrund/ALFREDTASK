@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../utils/axios';
-
+import { toast } from 'react-toastify';
 const AllFlashcards = () => {
     const [flashcards, setFlashcards] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,6 +11,7 @@ const AllFlashcards = () => {
         try {
             await api.delete(`/flashcards/${id}`);
             setFlashcards(cards => cards.filter(card => card._id !== id));
+            toast.success('Flashcard deleted successfully');
         } catch (err) {
             setError('Failed to delete flashcard');
         }
@@ -47,54 +48,62 @@ const AllFlashcards = () => {
     return (
         <div className="container mt-4">
             {flashcards.length > 0 ? (
-            <>
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>All Flashcards</h2>
-                <Link to="/create-flashcard" className="btn btn-primary">
-                    Create New
-                </Link>
-            </div>
-
-            <div className="row g-4">
-                {flashcards.map(card => (
-                    <div key={card._id} className="col-md-6 col-lg-4">
-                        <div className="card h-100">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-start mb-3">
-                                    <h5 className="card-title">Question</h5>
-                                    <div className="btn-group">
-                                        <Link
-                                            to={`/edit-flashcard/${card._id}`}
-                                            state={{ flashcard: card }}
-                                            className="btn btn-outline-primary btn-sm"
-                                        >
-                                            <i className="bi bi-pencil"></i> Edit
-                                        </Link>
-                                        <button
-                                            onClick={() => handleDelete(card._id)}
-                                            className="btn btn-outline-danger btn-sm ms-2"
-                                        >
-                                            <i className="bi bi-trash"></i> Delete
-                                        </button>
-                                    </div>
-                                </div>
-                                <p className="card-text">{card.question}</p>
-                                <hr />
-                                <h5 className="card-title">Answer</h5>
-                                <p className="card-text">{card.answer}</p>
-                                <div className="mt-3">
-                                    <span className="badge bg-primary me-2">Box {card.box}</span>
-                                    <small className="text-muted">
-                                        Next Review: {new Date(card.nextReviewDate).toLocaleDateString()}
-                                    </small>
-                                </div>
-                            </div>
+                <>
+                    <div className="mb-4">
+                        <h2 className="h3 mb-3">All Flashcards</h2>
+                        <div className="d-flex justify-content-end">
+                            <Link
+                                to="/create-flashcard"
+                                className="btn btn-primary py-1 px-3"
+                                style={{ fontSize: '0.875rem' }}
+                            >
+                                <i className="bi bi-plus-circle me-1"></i>
+                                <span className="d-none d-md-inline">Create New</span>
+                                <span className="d-md-none">New</span>
+                            </Link>
                         </div>
                     </div>
-                ))}
+
+                    <div className="row g-4">
+                        {flashcards.map(card => (
+                            <div key={card._id} className="col-md-6 col-lg-4">
+                                <div className="card h-100">
+                                    <div className="card-body">
+                                        <div className="d-flex justify-content-between align-items-start mb-3">
+                                            <h5 className="card-title">Question</h5>
+                                            <div className="btn-group">
+                                                <Link
+                                                    to={`/edit-flashcard/${card._id}`}
+                                                    state={{ flashcard: card }}
+                                                    className="btn btn-outline-primary btn-sm"
+                                                >
+                                                    <i className="bi bi-pencil"></i> Edit
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleDelete(card._id)}
+                                                    className="btn btn-outline-danger btn-sm ms-2"
+                                                >
+                                                    <i className="bi bi-trash"></i> Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p className="card-text">{card.question}</p>
+                                        <hr />
+                                        <h5 className="card-title">Answer</h5>
+                                        <p className="card-text">{card.answer}</p>
+                                        <div className="mt-3">
+                                            <span className="badge bg-primary me-2">Box {card.box}</span>
+                                            <small className="text-muted">
+                                                Next Review: {new Date(card.nextReviewDate).toLocaleDateString()}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </>
-                
+
             ) : (
                 <div className="text-center mt-5">
                     <div className="mb-4">

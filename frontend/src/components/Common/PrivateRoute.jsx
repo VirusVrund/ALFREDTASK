@@ -7,7 +7,6 @@ const PrivateRoute = ({ component: Component }) => {
   const location = useLocation();
 
   if (!auth?.token) {
-    console.log('No auth token found, redirecting to login');
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

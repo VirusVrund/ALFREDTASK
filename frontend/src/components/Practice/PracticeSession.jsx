@@ -20,12 +20,42 @@ const PracticeSession = () => {
     useEffect(() => {
         if (deckId === 'my-cards') {
             fetchUserCards();
+        } else if (deckId?.startsWith('ai-')) {
+            const aiDeckId = deckId.replace('ai-', '');
+            fetchAICards(aiDeckId);
         } else if (deckId) {
             fetchPredefinedCards(deckId);
         } else {
             setLoading(false);
         }
     }, [deckId]);
+    // Add new function to fetch AI cards
+    const fetchAICards = async (deckId) => {
+        try {
+            setLoading(true);
+            // Using the predefined decks category route with 'ai-generated' category
+            const response = await api.get(`/predefined-decks/category/ai-generated`);
+            // Find the specific deck from the AI-generated category
+            const aiDeck = response.data.find(deck => {
+                return deck._id === deckId
+            });
+
+            if (!aiDeck || !aiDeck.cards?.length) {
+                setError('No flashcards found in this AI deck!');
+                return;
+            }
+
+            const shuffledCards = aiDeck.cards.sort(() => Math.random() - 0.5);
+            setFlashcards(shuffledCards);
+            setSessionStarted(true);
+        } catch (err) {
+            console.error('Failed to fetch AI deck:', err);
+            setError('Failed to load AI deck');
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const fetchUserCards = async () => {
         try {
@@ -65,7 +95,7 @@ const PracticeSession = () => {
         }
     };
 
-   
+
     const handleResponse = (correct) => {
         setSessionStats(prev => ({
             correct: prev.correct + (correct ? 1 : 0),
@@ -91,8 +121,8 @@ const PracticeSession = () => {
         return (
             <div className="container mt-4">
                 <h2 className="text-center mb-4">Choose Your Practice Mode</h2>
-                <div className="row justify-content-center">
-                    <div className="col-md-4 mb-3">
+                <div className="row justify-content-center align-items-stretch g-4">
+                    <div className="col-md-4">
                         <div
                             className="card h-100 practice-mode-card user-cards"
                             onClick={() => navigate('/practice/my-cards')}
@@ -109,7 +139,26 @@ const PracticeSession = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-4 mb-3">
+
+                    <div className="col-md-4">
+                        <div
+                            className="card h-100 practice-mode-card ai-cards"
+                            onClick={() => navigate('/ai-decks')}
+                        >
+                            <div className="card-body text-center d-flex flex-column justify-content-center">
+                                <i className="bi bi-robot mb-3 fs-1"></i>
+                                <h5 className="card-title">AI Generated Decks</h5>
+                                <p className="card-text text-muted">Practice with AI generated flashcards</p>
+                                <div className="mt-auto">
+                                    <button className="btn btn-outline-info mt-3">
+                                        Browse AI Decks <i className="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-4">
                         <div
                             className="card h-100 practice-mode-card predefined-cards"
                             onClick={() => navigate('/predefined-decks')}
