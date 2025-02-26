@@ -7,6 +7,7 @@ A modern flashcard application built with the MERN stack (MongoDB, Express.js, R
 - 📝 Create, edit, and manage flashcards
 - 🔄 Spaced repetition learning system (5-box method)
 - ⚡ Practice mode for quick revision
+- 🤖 AI FLashcard Generation from topic and PDF
 - 📊 Progress tracking and analytics
 - 🌓 Dark/Light theme support
 - 📱 Responsive design for all devices
@@ -49,6 +50,7 @@ A modern flashcard application built with the MERN stack (MongoDB, Express.js, R
    MONGO_URI=your_mongodb_uri
    JWT_SECRET=your_jwt_secret
    PORT=5000
+   GEMINI_API_KEY=your_api_key
 
 
    ```
