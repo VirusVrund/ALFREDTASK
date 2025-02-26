@@ -34,10 +34,7 @@ const getDeckById = async (req, res) => {
 // Get decks by category
 const getDecksByCategory = async (req, res) => {
     try {
-        const decks = await PredefinedDeck.find(
-            { category: req.params.category },
-            '-cards'
-        );
+        const decks = await PredefinedDeck.find({ category: req.params.category });
         res.json(decks);
     } catch (error) {
         console.error('Error in getDecksByCategory:', error);

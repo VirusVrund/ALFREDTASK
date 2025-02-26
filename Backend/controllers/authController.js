@@ -58,18 +58,31 @@ exports.login = async (req, res, next) => {
 // Update user password
 exports.updatePassword = async (req, res, next) => {
   const { userId } = req.params;
-  const { password } = req.body;
+  const { oldPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findById(userId);
+    // Find user and include the password field
+    const user = await User.findById(userId).select('+password');
+    
     if (!user) {
       return next(new AppError('User not found', 404, ErrorCodes.NOT_FOUND));
     }
 
-    user.password = password;
+    // Verify old password
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+      return next(new AppError('Current password is incorrect', 401, ErrorCodes.INVALID_INPUT));
+    }
+
+    // Update to new password
+    user.password = newPassword;
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully' });
+    res.status(200).json({ 
+      status: 'success',
+      message: 'Password updated successfully' 
+    });
+
   } catch (err) {
     next(new AppError('Failed to update password', 500, ErrorCodes.DATABASE_ERROR));
   }

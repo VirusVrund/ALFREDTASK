@@ -7,6 +7,7 @@ const flashcardRoutes = require('./routes/flashcards');
 const authMiddleware = require('./middleware/authMiddleware');
 const errorHandler = require('./middleware/errorHandler');
 const predefinedDeckRoutes = require('./routes/predefined');
+const aiFlashcardsRouter = require('./routes/aiFlashcards');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -17,7 +18,7 @@ const app = express();
 // CORS configuration
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production'
-        ? ['https://flashcard-inky-pi.vercel.app', 'https://mindflipapp.vercel.app', 'http://localhost:5173']  // Fixed domain name
+        ? ['https://mindflipapp.vercel.app', 'http://localhost:5173']  // Fixed domain name
         : 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/flashcards', authMiddleware, flashcardRoutes);
 app.use('/api/predefined-decks', predefinedDeckRoutes);
+app.use('/api/ai-flashcards', aiFlashcardsRouter);
 
 // Health check route
 app.get('/health', (req, res) => {
@@ -58,7 +60,6 @@ app.get('/', (req, res) => {
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('MongoDB connected successfully');
     } catch (err) {
         console.error('MongoDB connection error:', err);
         // Retry connection after 5 seconds
@@ -74,15 +75,14 @@ mongoose.connection.on('error', (err) => {
 });
 
 mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected. Attempting to reconnect...');
     connectDB();
 });
 
-// Global error handling middleware
 app.use((req, res, next) => {
-    const error = new Error('Not Found');
-    error.status = 404;
-    next(error);
+    res.status(404).json({
+        status: 'error',
+        message: `Cannot ${req.method} ${req.originalUrl}`
+    });
 });
 
 app.use(errorHandler);

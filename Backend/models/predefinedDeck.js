@@ -36,6 +36,11 @@ const predefinedDeckSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null  // null for system decks, user ID for AI-generated
     }
 }, { timestamps: true });
 

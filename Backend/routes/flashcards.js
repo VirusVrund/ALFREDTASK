@@ -2,12 +2,12 @@ const express = require('express');
 const flashcardController = require('../controllers/flashcardController');
 const { createFlashcardSchema, updateFlashcardSchema } = require('../validation/flashcardValidation');
 const validationMiddleware = require('../middleware/validationMiddleware');
-const authMiddleware = require('../middleware/authMiddleware');
+const authenticate = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 // Apply auth middleware to all routes
-router.use(authMiddleware);
+router.use(authenticate);
 
 // Create a new flashcard
 router.post('/', validationMiddleware(createFlashcardSchema), flashcardController.createFlashcard);
